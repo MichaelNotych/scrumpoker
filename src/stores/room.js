@@ -5,7 +5,7 @@ import { useUserStore } from './user'
 import router from '@/router'
 
 const toast = useToast()
-const API_URL = 'https://scrumpoker-server.onrender.com/';
+const API_URL = 'https://scrumpoker-server.onrender.com/api/v1';
 const api = axios.create({
 	baseURL: API_URL
 });

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
-const API_URL = 'https://scrumpoker-server.onrender.com/';
+const API_URL = 'https://scrumpoker-server.onrender.com/api/v1';
 const api = axios.create({
 	baseURL: API_URL
 });
