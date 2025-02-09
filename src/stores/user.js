@@ -1,6 +1,10 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
+const api = axios.create({
+	baseURL: 'https://scrumpoker-server.onrender.com/'
+});
+
 export const useUserStore = defineStore("user", {
 	state: () => {
 		const user = localStorage.getItem('user');
@@ -13,7 +17,7 @@ export const useUserStore = defineStore("user", {
 	},
 	actions: {
 		async signup(roomId, userName) {
-			const response = await axios.post('/api/user/auth/', { roomId: roomId, name: userName });
+			const response = await api.post('/user/auth/', { roomId: roomId, name: userName });
 			const { data } = response.data;
 			this.token = data.token;
 			this.userId = data.user._id;

@@ -5,6 +5,10 @@ import { useUserStore } from './user'
 import router from '@/router'
 
 const toast = useToast()
+const API_URL = 'https://scrumpoker-server.onrender.com/';
+const api = axios.create({
+	baseURL: API_URL
+});
 
 export const useRoomStore = defineStore('room', {
 	state: () => ({
@@ -46,13 +50,13 @@ export const useRoomStore = defineStore('room', {
 	},
 	actions: {
 		async getRoom(roomId) {
-			const response = await axios.get(`/api/room/${roomId}`)
+			const response = await api.get(`/room/${roomId}`)
 			const { data } = response.data
 			this.roomId = data.room._id
 			this.roomName = data.room.name
 		},
 		async createRoom(roomName) {
-			const response = await axios.post('/api/room/', { name: roomName })
+			const response = await api.post('/room/', { name: roomName })
 			const { data } = response.data
 			this.roomId = data.room._id
 			this.roomName = data.room.name
@@ -64,7 +68,7 @@ export const useRoomStore = defineStore('room', {
 			try {
 				this.roomId = roomId
 				const user = useUserStore()
-				this.eventSource = new EventSource(`/api/room/enter/${roomId}/${user.token}`)
+				this.eventSource = new EventSource(`${API_URL}/room/enter/${roomId}/${user.token}`)
 
 				this.eventSource.addEventListener('joinRoom', () => {
 					const data = JSON.parse(event.data)
@@ -126,8 +130,8 @@ export const useRoomStore = defineStore('room', {
 		async vote(value) {
 			try {
 				const user = useUserStore()
-				await axios.post(
-					'/api/room/vote/',
+				await api.post(
+					'/room/vote/',
 					{
 						value: value,
 						roomId: this.roomId,
@@ -148,8 +152,8 @@ export const useRoomStore = defineStore('room', {
 		async revealResults() {
 			try {
 				const user = useUserStore()
-				await axios.post(
-					`/api/room/reveal/`,
+				await api.post(
+					`/room/reveal/`,
 					{
 						roomId: this.roomId,
 					},
@@ -167,8 +171,8 @@ export const useRoomStore = defineStore('room', {
 		async resetResults() {
 			try {
 				const user = useUserStore()
-				await axios.post(
-					`/api/room/reset/`,
+				await api.post(
+					`/room/reset/`,
 					{
 						roomId: this.roomId,
 					},
@@ -186,8 +190,8 @@ export const useRoomStore = defineStore('room', {
 		async leaveRoom() {
 			const user = useUserStore()
 			try {
-				await axios.post(
-					'/api/room/leave/',
+				await api.post(
+					'/room/leave/',
 					{
 						roomId: this.roomId,
 						userId: user.userId,
