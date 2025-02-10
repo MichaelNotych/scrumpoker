@@ -231,7 +231,7 @@ export const useRoomStore = defineStore('room', {
 			this.resetRoomState()
 		},
 		copyInviteLink() {
-			const url = `${window.location.origin}/?id=${this.roomId}`
+			const url = `${window.location.origin}/scrumpoker/?id=${this.roomId}`
 			window.navigator.clipboard.writeText(url)
 			toast.info('Link copied successfully')
 		},
