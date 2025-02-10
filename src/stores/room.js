@@ -20,6 +20,8 @@ export const useRoomStore = defineStore('room', {
 		users: [],
 		votes: [],
 		eventSource: null,
+		isLoading: false,
+		isLeaving: false,
 	}),
 	getters: {
 		getTopUsers: (state) => {
@@ -151,6 +153,7 @@ export const useRoomStore = defineStore('room', {
 		},
 		async revealResults() {
 			try {
+				this.isLoading = true;
 				const user = useUserStore()
 				await api.post(
 					`/room/reveal/`,
@@ -166,10 +169,13 @@ export const useRoomStore = defineStore('room', {
 				this.status = 'reveal'
 			} catch (error) {
 				console.log('error during results reveal', error)
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async resetResults() {
 			try {
+				this.isLoading = true;
 				const user = useUserStore()
 				await api.post(
 					`/room/reset/`,
@@ -185,11 +191,14 @@ export const useRoomStore = defineStore('room', {
 				this.status = null
 			} catch (error) {
 				console.log('error during results reset', error)
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async leaveRoom() {
 			const user = useUserStore()
 			try {
+				this.isLeaving = true;
 				await api.post(
 					'/room/leave/',
 					{
@@ -207,6 +216,7 @@ export const useRoomStore = defineStore('room', {
 				console.log('error during leaving room', data)
 				toast.error(data.message)
 			} finally {
+				this.isLeaving = false;
 				router.push('/')
 				this.resetRoomState()
 				user.logout()

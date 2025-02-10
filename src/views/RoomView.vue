@@ -7,6 +7,7 @@ import UserCard from '@/components/UserCard.vue';
 import CommonHeader from '@/components/CommonHeader.vue';
 import VoteCards from '@/components/VoteCards.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
+import CustomButton from '@/components/CustomButton.vue';
 
 const route = useRoute();
 const roomStore = useRoomStore();
@@ -16,7 +17,7 @@ onMounted(() => {
 	roomStore.enterRoom(route.params.id);
 
 	// clean up room connection on leave
-	window.addEventListener('popstate', function(event) {
+	window.addEventListener('popstate', function (event) {
 		console.log('popstate', event);
 		if (!event.state.current.includes('/room/')) {
 			roomStore.cancelRoomStream();
@@ -26,35 +27,42 @@ onMounted(() => {
 </script>
 
 <template>
-	<CommonHeader/>
+	<CommonHeader />
 	<section class="room">
 		<div class="room__wrapper">
 			<div class="room__users">
-				<UserCard v-for="(user, index) in roomStore.getTopUsers" :key="index" :user="user" :roomStatus="roomStore.status" />
+				<UserCard v-for="(user, index) in roomStore.getTopUsers" :key="index" :user="user"
+					:roomStatus="roomStore.status" />
 			</div>
 			<div class="room__table">
 				<div v-if="roomStore.status === 'reveal'" class="room__reveal">
 					<div class="room__results">
 						<span class="room__explain">Average</span>
 						<span class="room__explain">Median</span>
-						<span class="room__result">{{roomStore.average}}</span>
-						<span class="room__result">{{roomStore.median}}</span>
+						<span class="room__result">{{ roomStore.average }}</span>
+						<span class="room__result">{{ roomStore.median }}</span>
 					</div>
-					<button class="room__button" @click="roomStore.resetResults">Reset game</button>
+					<CustomButton @click="roomStore.resetResults" :isLoading="roomStore.isLoading">
+						Reset game
+					</CustomButton>
 				</div>
-				<button v-else-if="roomStore.users.length === 1" @click="roomStore.copyInviteLink" class="room__button">
-					Copy invite link<CopyIcon :width="18" :height="18" :color="'#fff'"/>
-				</button>
-				<button v-else-if="roomStore.status === 'ready'" class="room__button" @click="roomStore.revealResults">Show results</button>
+				<CustomButton v-else-if="roomStore.users.length === 1" @click="roomStore.copyInviteLink">
+					Copy invite link
+					<CopyIcon :width="18" :height="18" :color="'#fff'" />
+				</CustomButton>
+				<CustomButton v-else-if="roomStore.status === 'ready'" @click="roomStore.revealResults" :isLoading="roomStore.isLoading">
+					Show results
+				</CustomButton>
 				<div v-else>Pick your cards!</div>
 			</div>
 			<div class="room__users">
-				<UserCard v-for="(user, index) in roomStore.getBottomUsers" :key="index" :user="user" :roomStatus="roomStore.status" />
+				<UserCard v-for="(user, index) in roomStore.getBottomUsers" :key="index" :user="user"
+					:roomStatus="roomStore.status" />
 			</div>
 		</div>
 		<VoteCards />
 	</section>
-	<ThemeToggle/>
+	<ThemeToggle />
 </template>
 
 <style>
@@ -127,27 +135,5 @@ onMounted(() => {
 .room__result {
 	font-size: 2rem;
 	line-height: 1;
-}
-
-.room__button {
-	font-size: 1rem;
-	padding: 0.5rem 1rem;
-	border: none;
-	background-color: var(--accent-color);
-	border-radius: 0.25rem;
-	color: var(--accent-button-color);
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	transition: background-color 0.3s, transform 0.3s;
-}
-
-.room__button:hover {
-	transform: scale(1.05);
-	background-color: var(--accent-color-hover);
-}
-
-.room__button:active {
-	transform: scale(0.95);
 }
 </style>
