@@ -99,7 +99,7 @@ export const useRoomStore = defineStore('room', {
 
 					this.votes = votes
 
-					if (votes.length === this.users.length && !this.status) {
+					if (votes.length > 1 && !this.status) {
 						this.status = 'ready'
 					}
 				})
