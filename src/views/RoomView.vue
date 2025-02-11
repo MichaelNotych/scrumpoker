@@ -4,10 +4,9 @@ import { useRoute } from 'vue-router';
 import CopyIcon from '@/components/icons/CopyIcon.vue';
 import { useRoomStore } from '@/stores/room';
 import UserCard from '@/components/UserCard.vue';
-import CommonHeader from '@/components/CommonHeader.vue';
 import VoteCards from '@/components/VoteCards.vue';
-import ThemeToggle from '@/components/ThemeToggle.vue';
 import CustomButton from '@/components/CustomButton.vue';
+import CustomWrapper from '@/components/CustomWrapper.vue';
 
 const route = useRoute();
 const roomStore = useRoomStore();
@@ -27,9 +26,8 @@ onMounted(() => {
 </script>
 
 <template>
-	<CommonHeader />
-	<section class="room">
-		<div class="room__wrapper">
+	<CustomWrapper>
+		<div class="room">
 			<div class="room__users">
 				<UserCard v-for="(user, index) in roomStore.getTopUsers" :key="index" :user="user"
 					:roomStatus="roomStore.status" />
@@ -61,26 +59,11 @@ onMounted(() => {
 			</div>
 		</div>
 		<VoteCards />
-	</section>
-	<ThemeToggle />
+	</CustomWrapper>
 </template>
 
 <style>
 .room {
-	width: 100%;
-	margin: auto;
-	display: flex;
-	flex-direction: column;
-	padding: 4rem;
-}
-
-@media (max-width: 480px) {
-	.room {
-		padding: 1rem;
-	}
-}
-
-.room__wrapper {
 	margin: auto 0;
 	display: flex;
 	flex-direction: column;

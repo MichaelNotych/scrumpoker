@@ -17,6 +17,10 @@ const roomStore = useRoomStore();
 </template>
 <style>
 .header {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
 	padding: 1rem;
 	display: flex;
 	align-items: center;

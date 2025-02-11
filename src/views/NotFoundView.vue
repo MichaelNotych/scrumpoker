@@ -1,8 +1,12 @@
 <script setup>
-// todo: add custom 404 page
+import CustomButton from '@/components/CustomButton.vue';
+import CustomWrapper from '@/components/CustomWrapper.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 </script>
 <template>
-	<center>
+	<CustomWrapper>
 		<h1>Not found!</h1>
-	</center>
+		<CustomButton @click="router.push('/')">Go back home</CustomButton>
+	</CustomWrapper>
 </template>

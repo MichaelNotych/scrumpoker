@@ -2,11 +2,10 @@
 import router from '@/router';
 import { onMounted, reactive, watch } from 'vue';
 import { useToast } from 'vue-toastification';
-import CommonHeader from '@/components/CommonHeader.vue';
 import { useUserStore } from '@/stores/user';
 import { useRoomStore } from '@/stores/room';
-import ThemeToggle from '@/components/ThemeToggle.vue';
 import CustomButton from '@/components/CustomButton.vue';
+import CustomWrapper from '@/components/CustomWrapper.vue';
 
 const toast = useToast();
 
@@ -82,8 +81,7 @@ const submitHandler = async () => {
 </script>
 
 <template>
-	<CommonHeader />
-	<section class="wrapper">
+	<CustomWrapper>
 		<form class="form" @submit.prevent="submitHandler">
 			<input v-model="form.userName" required class="form__input" name="user_name" id="user_name"
 				placeholder="Username*" />
@@ -103,18 +101,10 @@ const submitHandler = async () => {
 			Want to create new room?
 			<button class="hint__button" @:click="actionHandler('create')"> Click here </button>
 		</p>
-	</section>
-	<ThemeToggle />
+	</CustomWrapper>
 </template>
 
 <style>
-.wrapper {
-	max-width: 640px;
-	padding: 0 1rem;
-	width: 100%;
-	margin: auto;
-}
-
 .form {
 	width: 100%;
 	display: flex;
