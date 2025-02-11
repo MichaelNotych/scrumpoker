@@ -1,18 +1,27 @@
 <script setup>
 import { useRoomStore } from '@/stores/room';
+import { ref } from 'vue';
 
 const cards = [0, 1, 2, 3, 5, 8, 13, 21, 34];
+const clickedCard = ref(null);
 const roomStore = useRoomStore();
 
-const voteHander = (vote) => {
+const voteHander = async (vote) => {
+	clickedCard.value = vote;
 	const voteToSubmit = parseInt(vote) === parseInt(roomStore.getCurrentUserVote) ? null : (vote).toString();
-	roomStore.vote(voteToSubmit);
+	await roomStore.vote(voteToSubmit);
+	clickedCard.value = null;
 }
 </script>
 <template>
 	<div class="cards">
 		<button v-for="card in cards" :key="card" @click="voteHander(card)"
-			:class="`card ${parseInt(card) === parseInt(roomStore.getCurrentUserVote) ? 'choosed' : ''}`">
+			:class="[
+				'card',
+				parseInt(card) === parseInt(roomStore.getCurrentUserVote) ? 'choosed' : '',
+				clickedCard === card ? 'loading' : '',
+
+			]">
 			{{ card }}
 		</button>
 	</div>
@@ -69,5 +78,41 @@ const voteHander = (vote) => {
 .card.disabled {
 	pointer-events: none;
 	opacity: 0.5;
+}
+
+.card.loading {
+	position: relative;
+	pointer-events: none;
+}
+
+.card.loading::after {
+	content: '';
+    position: absolute;
+    left: calc(50% - 0.75rem);
+    top: calc(50% - 0.75rem);
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 100%;
+	border: 0.25rem solid var(--accent-button-color);
+	border-top-color:var(--background-color-light);
+    animation: spinner 0.9s linear infinite;
+}
+
+.card.choosed.loading::after {
+	border-top-color: var(--accent-color);
+}
+
+.card.loading::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-color: inherit;
+	border-radius: inherit;
+}
+
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
 }
 </style>
