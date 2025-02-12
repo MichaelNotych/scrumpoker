@@ -83,6 +83,7 @@ const voteHander = async (vote) => {
 .card.loading {
 	position: relative;
 	pointer-events: none;
+	border-color: var(--accent-color-hover);
 }
 
 .card.loading::after {
@@ -93,12 +94,13 @@ const voteHander = async (vote) => {
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 100%;
-	border: 0.25rem solid var(--accent-button-color);
+	border: 0.25rem solid var(--accent-color);
 	border-top-color:var(--background-color-light);
     animation: spinner 0.9s linear infinite;
 }
 
 .card.choosed.loading::after {
+	border-color: var(--accent-button-color);
 	border-top-color: var(--accent-color);
 }
 
