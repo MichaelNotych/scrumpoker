@@ -2,7 +2,7 @@
 import { useRoomStore } from '@/stores/room';
 import { ref } from 'vue';
 
-const cards = [0, 1, 2, 3, 5, 8, 13, 21, 34];
+const cards = [0, 1, 2, 3, 5, 8, 13, 21, 40];
 const clickedCard = ref(null);
 const roomStore = useRoomStore();
 
