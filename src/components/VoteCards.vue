@@ -1,12 +1,17 @@
 <script setup>
 import { useRoomStore } from '@/stores/room';
 import { ref } from 'vue';
+import { useToast } from 'vue-toastification';
 
 const cards = [0, 1, 2, 3, 5, 8, 13, 21, 40];
 const clickedCard = ref(null);
 const roomStore = useRoomStore();
+const toast = useToast();
 
 const voteHander = async (vote) => {
+	if (roomStore.status === 'reveal') {
+		return toast.info('You can\'t vote now, reset the game first');
+	}
 	clickedCard.value = vote;
 	const voteToSubmit = parseInt(vote) === parseInt(roomStore.getCurrentUserVote) ? null : (vote).toString();
 	await roomStore.vote(voteToSubmit);
