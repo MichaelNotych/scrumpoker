@@ -3,7 +3,7 @@ import { useRoomStore } from '@/stores/room';
 import { ref } from 'vue';
 import { useToast } from 'vue-toastification';
 
-const cards = [0, 1, 2, 3, 5, 8, 13, 21, 40];
+const cards = ['?', '0', '1', '2', '3', '5', '8', '13', '21', '40'];
 const clickedCard = ref(null);
 const roomStore = useRoomStore();
 const toast = useToast();
@@ -13,7 +13,7 @@ const voteHander = async (vote) => {
 		return toast.info('You can\'t vote now, reset the game first');
 	}
 	clickedCard.value = vote;
-	const voteToSubmit = parseInt(vote) === parseInt(roomStore.getCurrentUserVote) ? null : (vote).toString();
+	const voteToSubmit = vote === roomStore.getCurrentUserVote ? null : vote;
 	await roomStore.vote(voteToSubmit);
 	clickedCard.value = null;
 }
@@ -23,7 +23,7 @@ const voteHander = async (vote) => {
 		<button v-for="card in cards" :key="card" @click="voteHander(card)"
 			:class="[
 				'card',
-				parseInt(card) === parseInt(roomStore.getCurrentUserVote) ? 'choosed' : '',
+				card === roomStore.getCurrentUserVote ? 'choosed' : '',
 				clickedCard === card ? 'loading' : '',
 
 			]">
