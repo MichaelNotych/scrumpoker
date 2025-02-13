@@ -55,15 +55,15 @@ const submitHandler = async () => {
 		// set button loader
 		form.isLoading = true;
 
+		// sign up user
+		await userStore.signup(form.userName);
+
 		// get the room data
 		if (form.action === 'create') {
 			await roomStore.createRoom(form.roomName);
 		} else if (form.action === 'enter') {
 			await roomStore.getRoom(form.roomId);
 		}
-
-		// sign up user
-		await userStore.signup(roomStore.roomId, form.userName);
 
 		// save user name for future
 		localStorage.setItem('user-name', form.userName);

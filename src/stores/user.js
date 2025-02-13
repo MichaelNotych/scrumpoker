@@ -17,8 +17,8 @@ export const useUserStore = defineStore("user", {
 		};
 	},
 	actions: {
-		async signup(roomId, userName) {
-			const response = await api.post('/user/auth/', { roomId: roomId, name: userName });
+		async signup(userName) {
+			const response = await api.post('/user/auth/', { name: userName });
 			const { data } = response.data;
 			this.token = data.token;
 			this.userId = data.user._id;

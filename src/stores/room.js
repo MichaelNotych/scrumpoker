@@ -17,6 +17,7 @@ export const useRoomStore = defineStore('room', {
 		status: null,
 		median: null,
 		average: null,
+		owner: null,
 		users: [],
 		votes: [],
 		eventSource: null,
@@ -49,22 +50,39 @@ export const useRoomStore = defineStore('room', {
 			const vote = state.votes.find((vote) => vote.userId === user.userId)
 			return vote ? vote.value : null
 		},
+		isCurrentUserOwner: (state) => {
+			const user = useUserStore();
+			return state.owner === user.userId;
+		}
 	},
 	actions: {
 		async getRoom(roomId) {
-			const response = await api.get(`/room/${roomId}`)
+			const user = useUserStore()
+			const response = await api.get(`/room/${roomId}`,
+				{
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				},
+			)
 			const { data } = response.data
 			this.roomId = data.room._id
 			this.roomName = data.room.name
+			this.owner = data.room.owner
 		},
 		async createRoom(roomName) {
-			const response = await api.post('/room/', { name: roomName })
+			const user = useUserStore()
+			const response = await api.post('/room/', { name: roomName, owner: user.userId },
+				{
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				},
+			)
 			const { data } = response.data
 			this.roomId = data.room._id
 			this.roomName = data.room.name
-			this.status = data.room.status
-			this.median = data.room.median
-			this.average = data.room.average
+			this.owner = data.room.owner
 		},
 		async enterRoom(roomId) {
 			try {
@@ -78,6 +96,7 @@ export const useRoomStore = defineStore('room', {
 					this.median = data.median
 					this.average = data.average
 					this.roomName = data.name
+					this.owner = data.owner
 				})
 
 				this.eventSource.addEventListener('usersUpdate', (event) => {
@@ -124,6 +143,7 @@ export const useRoomStore = defineStore('room', {
 					console.log('error during room connection', error)
 					toast.error('Error during room connection, please try again')
 					router.push(this.roomId ? `/?id=${this.roomId}` : '/')
+					this.cancelRoomStream();
 				})
 			} catch (error) {
 				console.error('Cannot enter the room', error)
@@ -241,7 +261,7 @@ export const useRoomStore = defineStore('room', {
 			this.resetRoomState()
 		},
 		copyInviteLink() {
-			const url = `${window.location.origin}/scrumpoker/?id=${this.roomId}`
+			const url = `${window.location.origin}/?id=${this.roomId}`
 			window.navigator.clipboard.writeText(url)
 			toast.info('Link copied successfully')
 		},

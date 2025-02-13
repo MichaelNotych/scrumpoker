@@ -40,7 +40,7 @@ onMounted(() => {
 						<span class="room__result">{{ roomStore.average }}</span>
 						<span class="room__result">{{ roomStore.median }}</span>
 					</div>
-					<CustomButton @click="roomStore.resetResults" :isLoading="roomStore.isLoading">
+					<CustomButton v-if="roomStore.isCurrentUserOwner" @click="roomStore.resetResults" :isLoading="roomStore.isLoading">
 						Reset game
 					</CustomButton>
 				</div>
@@ -48,7 +48,7 @@ onMounted(() => {
 					Copy invite link
 					<CopyIcon :width="18" :height="18" :color="'#fff'" />
 				</CustomButton>
-				<CustomButton v-else-if="roomStore.status === 'ready'" @click="roomStore.revealResults" :isLoading="roomStore.isLoading">
+				<CustomButton v-else-if="roomStore.status === 'ready' && roomStore.isCurrentUserOwner" @click="roomStore.revealResults" :isLoading="roomStore.isLoading">
 					Show results
 				</CustomButton>
 				<div v-else>Pick your cards!</div>
