@@ -127,7 +127,7 @@ export const useRoomStore = defineStore('room', {
 
 				this.eventSource.addEventListener('resultsReveal', (event) => {
 					const data = JSON.parse(event.data)
-					this.status = 'reveal'
+					this.status = data.status
 					this.median = data.median
 					this.average = data.average
 				})
@@ -139,11 +139,16 @@ export const useRoomStore = defineStore('room', {
 					this.votes = []
 				})
 
+				this.eventSource.addEventListener('roomDeleted', () => {
+					this.cancelRoomStream()
+					toast.info('Room has been deleted by the owner')
+					router.push('/')
+				})
+
 				this.eventSource.addEventListener('error', (error) => {
 					console.log('error during room connection', error)
 					toast.error('Error during room connection, please try again')
-					router.push(this.roomId ? `/?id=${this.roomId}` : '/')
-					this.cancelRoomStream();
+					router.push('/')
 				})
 			} catch (error) {
 				console.error('Cannot enter the room', error)
